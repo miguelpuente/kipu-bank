@@ -71,8 +71,8 @@ contract KipuBank {
     /// @notice Contador de depósitos por usuario
     mapping(address => uint256) public depositCountPerUser;
 
-    /// @notice Bloqueo para el modificador nonReentrant (1 = unlocked, 2 = locked)
-    uint256 private _locked = 1;
+    /// @notice Bloqueo para el modificador nonReentrant (1 = locked, 2 = unlocked)
+    uint256 private _status = 2;
 
 
     /*/////////////////////////////////////////////////////////////
@@ -112,11 +112,12 @@ contract KipuBank {
 
     /// @notice Modificador para prevenir llamadas reentrantes
     modifier nonReentrant() {
-        if (_locked != 1) revert ReentrantCall();
-        _locked = 2;
+        if (_status != 2) revert ReentrantCall();
+        _status = 1;
         _;
-        _locked = 1;
+        _status = 2;
     }
+
 
     /*/////////////////////////////////////////////////////////////
                                 RECEPCIÓN DE ETH
